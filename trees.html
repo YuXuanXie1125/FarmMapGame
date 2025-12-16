@@ -1,0 +1,1998 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云种树农场 | 全国农产品直供系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --accent-color: #FF9800;
+            --accent-light: #FFB74D;
+            --light-color: #F1F8E9;
+            --dark-color: #1B5E20;
+            --farm-green: #7CB342;
+            --soil-brown: #A1887F;
+            --tree-brown: #5D4037;
+            --gold-color: #FFD700;
+            --silver-color: #C0C0C0;
+            --bronze-color: #CD7F32;
+            --water-blue: #29B6F6;
+            --sun-yellow: #FFEB3B;
+            --pest-red: #F44336;
+            --harvest-orange: #FF8F00;
+            --bloom-pink: #E91E63;
+            --fruit-red: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            font-size: 24px; /* 稍微减小字体 */
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* 顶部导航栏 */
+        .top-navbar {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            height: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--farm-green);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 0 15px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            color: white !important;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+            .nav-btn:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: translateY(-1px);
+            }
+
+            .nav-btn i {
+                font-size: 18px;
+            }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.95) !important;
+            font-weight: 600;
+            padding: 6px 12px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .nav-link:hover {
+                background: rgba(255, 255, 255, 0.15);
+                transform: translateY(-1px);
+            }
+
+            .nav-link.active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+        .farm-coins {
+            background: rgba(255, 215, 0, 0.25);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            color: #FFD700;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 16px;
+        }
+
+        /* 主内容区域 - 新布局 */
+        .main-content {
+            margin-top: 70px;
+            height: calc(100vh - 70px);
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            grid-template-rows: 1fr;
+            gap: 10px;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+            overflow: hidden;
+        }
+
+        /* 左侧面板 - 农场信息、工具和操作提示 */
+        .left-panel {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* 信息卡片区 - 简化版 */
+        .info-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 2px solid rgba(124, 179, 66, 0.2);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid rgba(124, 179, 66, 0.2);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .info-card:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 10px rgba(124, 179, 66, 0.15);
+                border-color: var(--farm-green);
+            }
+
+        .info-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* 工具面板 */
+        .tools-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 2px solid rgba(124, 179, 66, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
+
+        .tool-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .tool-btn {
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+            border: 2px solid rgba(124, 179, 66, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+            .tool-btn:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(124, 179, 66, 0.15);
+                border-color: var(--farm-green);
+            }
+
+            .tool-btn:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+
+        .tool-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .tool-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 3px;
+        }
+
+        .tool-cost {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 操作提示 */
+        .operation-tips {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 2px solid rgba(124, 179, 66, 0.2);
+            margin-top: 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .tips-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tips-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .tip-item {
+            margin-bottom: 6px;
+            padding: 6px;
+            background: #f1f8e9;
+            border-radius: 6px;
+        }
+
+        /* 中间农场区域 - 单独占一个面板 */
+        .farm-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 3px solid rgba(124, 179, 66, 0.2);
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 10px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .farm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(124, 179, 66, 0.2);
+        }
+
+        .farm-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .farm-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* 农场土地网格 */
+        .farm-land {
+            background: linear-gradient(135deg, #8D6E63, #A1887F);
+            border-radius: 8px;
+            padding: 10px;
+            position: relative;
+            border: 2px solid #6D4C41;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .farm-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            height: 100%;
+        }
+
+        /* 土地地块 */
+        .land-plot {
+            background: #BCAAA4;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #8D6E63;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+            .land-plot:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+                border-color: var(--farm-green);
+            }
+
+            .land-plot.empty {
+                background: linear-gradient(135deg, #D7CCC8, #BCAAA4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                color: #5D4037;
+            }
+
+        .empty-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .land-plot.planted {
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+        }
+
+        .land-plot.selected {
+            border-color: #FFD700;
+            border-width: 2px;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+        }
+
+        /* 成熟状态 */
+        .land-plot.mature {
+            background: linear-gradient(135deg, #fff3e0, #ffecb3);
+            border-color: #FF9800;
+        }
+
+        /* 树木容器 */
+        .tree-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* 优化后的树木样式 */
+        .tree {
+            position: relative;
+            width: 60%;
+            height: 85%;
+            transform-origin: bottom center;
+            transition: all 0.3s ease;
+        }
+
+        /* 树冠部分 */
+        .tree-canopy {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            border-radius: 50% 50% 40% 40%;
+            z-index: 2;
+        }
+
+        /* 树干部分 */
+        .tree-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--tree-brown);
+            z-index: 1;
+        }
+
+        /* 树叶装饰 */
+        .tree-leaf {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #388E3C;
+            border-radius: 50%;
+            z-index: 3;
+        }
+
+        /* 动态球 - 不同树种不同颜色 */
+        .tree-orb {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid white;
+            animation: float 2s infinite ease-in-out;
+            z-index: 4;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* 幼苗期 */
+        .tree-seedling .tree-trunk {
+            width: 5px;
+            height: 20px;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .tree-seedling .tree-canopy {
+            width: 25px;
+            height: 18px;
+            bottom: 18px;
+            background: #81C784;
+        }
+
+        .tree-seedling .tree-leaf {
+            width: 6px;
+            height: 6px;
+        }
+
+            .tree-seedling .tree-leaf:nth-child(1) {
+                top: 5px;
+                left: 25%;
+            }
+
+            .tree-seedling .tree-leaf:nth-child(2) {
+                top: 3px;
+                right: 25%;
+            }
+
+        /* 生长期 */
+        .tree-growing .tree-trunk {
+            width: 6px;
+            height: 28px;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tree-growing .tree-canopy {
+            width: 35px;
+            height: 25px;
+            bottom: 26px;
+            background: #4CAF50;
+        }
+
+        .tree-growing .tree-leaf {
+            width: 8px;
+            height: 8px;
+        }
+
+            .tree-growing .tree-leaf:nth-child(1) {
+                top: 8px;
+                left: 20%;
+            }
+
+            .tree-growing .tree-leaf:nth-child(2) {
+                top: 5px;
+                right: 20%;
+            }
+
+            .tree-growing .tree-leaf:nth-child(3) {
+                top: 14px;
+                left: 35%;
+            }
+
+        /* 开花期 */
+        .tree-blooming .tree-trunk {
+            width: 7px;
+            height: 35px;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tree-blooming .tree-canopy {
+            width: 42px;
+            height: 30px;
+            bottom: 33px;
+            background: #8BC34A;
+        }
+
+        .tree-blooming .tree-leaf {
+            width: 9px;
+            height: 9px;
+        }
+
+        .tree-blooming .tree-orb {
+            display: block;
+            width: 8px;
+            height: 8px;
+        }
+
+            .tree-blooming .tree-orb:nth-child(1) {
+                top: 8px;
+                left: 15%;
+                animation-delay: 0s;
+            }
+
+            .tree-blooming .tree-orb:nth-child(2) {
+                top: 5px;
+                right: 15%;
+                animation-delay: 0.5s;
+            }
+
+            .tree-blooming .tree-orb:nth-child(3) {
+                top: 15px;
+                left: 30%;
+                animation-delay: 1s;
+            }
+
+            .tree-blooming .tree-orb:nth-child(4) {
+                top: 12px;
+                right: 30%;
+                animation-delay: 1.5s;
+            }
+
+        /* 结果期 */
+        .tree-fruiting .tree-trunk {
+            width: 8px;
+            height: 40px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .tree-fruiting .tree-canopy {
+            width: 48px;
+            height: 35px;
+            bottom: 38px;
+            background: #388E3C;
+        }
+
+        .tree-fruiting .tree-orb {
+            width: 10px;
+            height: 10px;
+            display: block;
+        }
+
+            .tree-fruiting .tree-orb:nth-child(1) {
+                top: 10px;
+                left: 20%;
+                animation-delay: 0s;
+            }
+
+            .tree-fruiting .tree-orb:nth-child(2) {
+                top: 8px;
+                right: 20%;
+                animation-delay: 0.3s;
+            }
+
+            .tree-fruiting .tree-orb:nth-child(3) {
+                top: 18px;
+                left: 35%;
+                animation-delay: 0.6s;
+            }
+
+            .tree-fruiting .tree-orb:nth-child(4) {
+                top: 15px;
+                right: 35%;
+                animation-delay: 0.9s;
+            }
+
+        /* 成熟期 */
+        .tree-ripe .tree-trunk {
+            width: 9px;
+            height: 45px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .tree-ripe .tree-canopy {
+            width: 55px;
+            height: 40px;
+            bottom: 42px;
+            background: #2E7D32;
+            animation: ripe-pulse 2s infinite;
+        }
+
+        .tree-ripe .tree-orb {
+            width: 12px;
+            height: 12px;
+            display: block;
+            animation: ripe-float 1.5s infinite ease-in-out;
+        }
+
+            .tree-ripe .tree-orb:nth-child(1) {
+                top: 12px;
+                left: 15%;
+                animation-delay: 0s;
+            }
+
+            .tree-ripe .tree-orb:nth-child(2) {
+                top: 10px;
+                right: 15%;
+                animation-delay: 0.2s;
+            }
+
+            .tree-ripe .tree-orb:nth-child(3) {
+                top: 22px;
+                left: 30%;
+                animation-delay: 0.4s;
+            }
+
+            .tree-ripe .tree-orb:nth-child(4) {
+                top: 18px;
+                right: 30%;
+                animation-delay: 0.6s;
+            }
+
+            .tree-ripe .tree-orb:nth-child(5) {
+                top: 8px;
+                left: 45%;
+                animation-delay: 0.8s;
+            }
+
+        /* 树名样式 - 放在卡片内部上方 */
+        .tree-name {
+            position: absolute;
+            top: 4px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--dark-color);
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            z-index: 10;
+            padding: 2px 4px;
+        }
+
+        /* 收获按钮 */
+        .harvest-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: linear-gradient(135deg, var(--harvest-orange), #FF6F00);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 20;
+        }
+
+            .harvest-btn:hover {
+                transform: scale(1.1);
+                background: linear-gradient(135deg, #FF6F00, #FF8F00);
+                box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            }
+
+        /* 成熟提示 */
+        .mature-tag {
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #FF9800, #FF5722);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 20;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+
+        /* 生长进度条 */
+        .growth-progress {
+            position: absolute;
+            bottom: 3px;
+            left: 0;
+            right: 0;
+            width: 85%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .growth-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD600, #FF9800);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        /* 作物状态指示器 */
+        .status-indicators {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            display: flex;
+            gap: 4px;
+            z-index: 20;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-thirsty {
+            background: var(--water-blue);
+        }
+
+        .status-pest {
+            background: var(--pest-red);
+        }
+
+        /* 右侧面板 - 改为可以种的种子 */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* 种子选择面板 */
+        .seeds-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 3px solid rgba(124, 179, 66, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .seeds-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .seeds-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .seeds-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .seed-item {
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+            border: 2px solid rgba(124, 179, 66, 0.2);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .seed-item:hover:not(.disabled) {
+                transform: translateY(-2px);
+                border-color: var(--farm-green);
+                box-shadow: 0 4px 10px rgba(124, 179, 66, 0.1);
+            }
+
+            .seed-item.selected {
+                background: linear-gradient(135deg, rgba(124, 179, 66, 0.1), rgba(76, 175, 80, 0.05));
+                border-color: var(--farm-green);
+                box-shadow: 0 4px 10px rgba(124, 179, 66, 0.1);
+            }
+
+            .seed-item.disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+
+        .seed-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .seed-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 2px;
+        }
+
+        .seed-cost {
+            font-size: 12px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .seed-time {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* 动画效果 */
+        @keyframes flower-bloom {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.3);
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        @keyframes ripe-float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-4px) scale(1.2);
+            }
+        }
+
+        @keyframes ripe-pulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+        }
+
+        /* 提示消息 */
+        .alert-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            display: none;
+            min-width: 250px;
+            max-width: 400px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            padding: 12px 16px;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* 农场提示 */
+        .farm-notification {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 100;
+            display: none;
+            animation: slideUp 0.5s ease;
+            white-space: nowrap;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 250px 1fr 250px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 220px 1fr 220px;
+                gap: 8px;
+                padding: 8px;
+            }
+
+            body {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                height: auto;
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+                gap: 10px;
+            }
+
+            .farm-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(3, 120px);
+            }
+
+            .top-navbar {
+                height: 80px;
+            }
+
+            .nav-content {
+                flex-direction: column;
+                justify-content: center;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+
+            .nav-left-buttons {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .navbar-brand {
+                order: 1;
+            }
+
+            .nav-links {
+                order: 2;
+            }
+
+            .main-content {
+                margin-top: 80px;
+            }
+        }
+
+        /* 交互效果 */
+        .interactive {
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+            .interactive:hover:not(:disabled) {
+                transform: translateY(-1px);
+            }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-navbar">
+        <div class="nav-content">
+            <div class="nav-left-buttons">
+                <a href="index.html" class="nav-btn interactive">
+                    <i class="bi bi-house-door"></i> 返回首页
+                </a>
+                <a href="map.html" class="nav-btn interactive">
+                    <i class="bi bi-map"></i> 查看配送地图
+                </a>
+            </div>
+
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-tree-fill"></i>
+                云种树农场
+            </a>
+
+            <div class="nav-links">
+                <a class="nav-link" href="index.html">
+                    <i class="bi bi-shop"></i> 商城
+                </a>
+                <div class="nav-link farm-coins">
+                    <i class="bi bi-coin"></i>
+                    <span id="farmCoinsTop">1000</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 左侧面板 - 农场信息、工具和操作提示 -->
+        <div class="left-panel">
+            <!-- 信息卡片区 - 简化版 -->
+            <div class="info-panel">
+                <div class="info-card interactive" onclick="showInfo('trees')">
+                    <div class="info-icon">🌱</div>
+                    <div class="info-value" id="totalTrees">3</div>
+                    <div class="info-label">种植总数</div>
+                </div>
+                <div class="info-card interactive" onclick="showInfo('coins')">
+                    <div class="info-icon">💰</div>
+                    <div class="info-value" id="farmCoinsCard">1000</div>
+                    <div class="info-label">农场币</div>
+                </div>
+                <div class="info-card interactive" onclick="showInfo('rank')">
+                    <div class="info-icon">🏆</div>
+                    <div class="info-value" id="userRank">15</div>
+                    <div class="info-label">全球排名</div>
+                </div>
+                <div class="info-card interactive" onclick="showInfo('exp')">
+                    <div class="info-icon">⭐</div>
+                    <div class="info-value" id="userExp">1250</div>
+                    <div class="info-label">农场经验</div>
+                </div>
+            </div>
+
+            <!-- 工具面板 -->
+            <div class="tools-panel">
+                <div class="tool-title">
+                    <i class="bi bi-tools"></i> 农场工具
+                </div>
+                <div class="tool-grid">
+                    <button class="tool-btn interactive" onclick="waterTree()">
+                        <div class="tool-icon">💧</div>
+                        <div class="tool-name">浇水</div>
+                        <div class="tool-cost">5农场币</div>
+                    </button>
+                    <button class="tool-btn interactive" onclick="fertilizeTree()">
+                        <div class="tool-icon">🌱</div>
+                        <div class="tool-name">施肥</div>
+                        <div class="tool-cost">10农场币</div>
+                    </button>
+                    <button class="tool-btn interactive" onclick="removePest()">
+                        <div class="tool-icon">🐛</div>
+                        <div class="tool-name">除虫</div>
+                        <div class="tool-cost">8农场币</div>
+                    </button>
+                    <button class="tool-btn interactive" onclick="checkGrowth()">
+                        <div class="tool-icon">📊</div>
+                        <div class="tool-name">查看生长</div>
+                        <div class="tool-cost">免费</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 操作提示 -->
+            <div class="operation-tips">
+                <div class="tips-title">
+                    <i class="bi bi-lightbulb"></i> 操作提示
+                </div>
+                <div class="tips-content">
+                    <div class="tip-item">1. 点击空土地选择种植位置</div>
+                    <div class="tip-item">2. 右侧选择要种植的作物</div>
+                    <div class="tip-item">3. 点击树木选中，使用工具照料</div>
+                    <div class="tip-item">4. 成熟后点击收获按钮获得收益</div>
+                    <div class="tip-item">5. 及时浇水施肥可加快生长</div>
+                    <div class="tip-item">6. 注意病虫害，及时除虫</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间农场区域 - 单独占一个面板 -->
+        <div class="farm-panel">
+            <div class="farm-header">
+                <div class="farm-title">
+                    <i class="bi bi-grid-3x3"></i> 我的农场
+                </div>
+                <div class="farm-stats">
+                    <div class="stat-item">
+                        <span>土地:</span>
+                        <span class="stat-value" id="landCount">3/9</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>今日:</span>
+                        <span class="stat-value" id="todayTrees">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 农场土地 -->
+            <div class="farm-land">
+                <!-- 农场操作提示 -->
+                <div class="farm-notification" id="farmNotification"></div>
+
+                <div class="farm-grid" id="farmGrid">
+                    <!-- 土地地块动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧面板 - 改为可以种的种子 -->
+        <div class="right-panel">
+            <!-- 种子选择面板 -->
+            <div class="seeds-panel">
+                <div class="seeds-header">
+                    <div class="seeds-title">
+                        <i class="bi bi-seed"></i> 选择种子
+                    </div>
+                </div>
+                <div class="seeds-list" id="seedsList">
+                    <!-- 种子选项动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示消息 -->
+    <div class="alert alert-success alert-message" id="successAlert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span id="successMessage"></span>
+    </div>
+
+    <div class="alert alert-danger alert-message" id="errorAlert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span id="errorMessage"></span>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // 全局变量
+        let farmData = {
+            coins: 1000,
+            totalTrees: 3,
+            userRank: 15,
+            userExp: 1250,
+            selectedCrop: null,
+            selectedPlot: null,
+            selectedTree: null,
+            warehouse: {},
+            tools: {
+                water: { cost: 5, effect: 15, applied: false },
+                fertilizer: { cost: 10, effect: 20, applied: false },
+                pesticide: { cost: 8, effect: 25, applied: false }
+            }
+        };
+
+        // 作物数据 - 每种树设置不同的动态球颜色
+        const crops = [
+            { id: 1, name: '苹果树', icon: '🍎', time: '3天', cost: 80, exp: 60, product: '苹果', sellPrice: 150, orbColor: '#FF5252' },
+            { id: 2, name: '梨树', icon: '🍐', time: '2天', cost: 60, exp: 50, product: '梨', sellPrice: 120, orbColor: '#FFD740' },
+            { id: 3, name: '桃树', icon: '🍑', time: '4天', cost: 100, exp: 70, product: '桃子', sellPrice: 180, orbColor: '#FF4081' },
+            { id: 4, name: '橘子树', icon: '🍊', time: '3天', cost: 70, exp: 55, product: '橘子', sellPrice: 130, orbColor: '#FF9800' },
+            { id: 5, name: '芒果树', icon: '🥭', time: '5天', cost: 120, exp: 80, product: '芒果', sellPrice: 220, orbColor: '#FFC107' },
+            { id: 6, name: '柿子树', icon: '🍅', time: '4天', cost: 90, exp: 65, product: '柿子', sellPrice: 160, orbColor: '#FF5722' },
+            { id: 7, name: '核桃树', icon: '🌰', time: '6天', cost: 150, exp: 90, product: '核桃', sellPrice: 280, orbColor: '#795548' },
+            { id: 8, name: '枣树', icon: '🫘', time: '3天', cost: 65, exp: 52, product: '枣子', sellPrice: 110, orbColor: '#F44336' }
+        ];
+
+        // 土地数据
+        let landPlots = [
+            {
+                id: 1,
+                planted: true,
+                crop: '苹果树',
+                cropId: 1,
+                progress: 65,
+                growthStage: 'fruiting',
+                needs: { water: true, pest: false },
+                watered: false,
+                fertilized: false,
+                ripe: false,
+                mature: false
+            },
+            { id: 2, planted: false },
+            {
+                id: 3,
+                planted: true,
+                crop: '梨树',
+                cropId: 2,
+                progress: 30,
+                growthStage: 'growing',
+                needs: { water: false, pest: true },
+                watered: false,
+                fertilized: false,
+                ripe: false,
+                mature: false
+            },
+            { id: 4, planted: false },
+            { id: 5, planted: false },
+            {
+                id: 6,
+                planted: true,
+                crop: '桃树',
+                cropId: 3,
+                progress: 85,
+                growthStage: 'fruiting',
+                needs: { water: true, pest: true },
+                watered: false,
+                fertilized: false,
+                ripe: false,
+                mature: false
+            },
+            { id: 7, planted: false },
+            { id: 8, planted: false },
+            { id: 9, planted: false }
+        ];
+
+        // 获取生长阶段
+        function getGrowthStage(progress) {
+            if (progress < 20) return 'seedling';
+            if (progress < 40) return 'growing';
+            if (progress < 60) return 'blooming';
+            if (progress < 80) return 'fruiting';
+            if (progress < 100) return 'fruiting';
+            return 'ripe';
+        }
+
+        // 获取生长阶段名称
+        function getGrowthStageName(stage) {
+            const stages = {
+                'seedling': '幼苗期',
+                'growing': '生长期',
+                'blooming': '开花期',
+                'fruiting': '结果期',
+                'ripe': '成熟期'
+            };
+            return stages[stage] || stage;
+        }
+
+        // 播放提示音
+        function playSound(type) {
+            try {
+                // 创建音效
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                if (type === 'success') {
+                    // 成功音效
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+
+                } else if (type === 'error') {
+                    // 错误音效
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    oscillator.frequency.setValueAtTime(392, audioContext.currentTime); // G4
+                    oscillator.frequency.setValueAtTime(349.23, audioContext.currentTime + 0.1); // F4
+                    oscillator.frequency.setValueAtTime(311.13, audioContext.currentTime + 0.2); // D#4
+
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                }
+            } catch (e) {
+                console.log('音效播放失败:', e);
+            }
+        }
+
+        $(document).ready(function () {
+            console.log('云种树农场系统初始化...');
+
+            // 初始化农场
+            initFarm();
+
+            // 初始化种子选择
+            initSeedsSelection();
+
+            // 绑定事件
+            bindEvents();
+
+            // 开始游戏循环
+            startGameLoop();
+        });
+
+        function initFarm() {
+            // 更新农场信息
+            updateFarmInfo();
+
+            // 生成土地地块
+            renderLandPlots();
+        }
+
+        function updateFarmInfo() {
+            const plantedCount = landPlots.filter(p => p.planted).length;
+
+            $('#totalTrees').text(farmData.totalTrees);
+            $('#farmCoinsTop').text(farmData.coins);
+            $('#farmCoinsCard').text(farmData.coins);
+            $('#userRank').text(farmData.userRank);
+            $('#userExp').text(farmData.userExp);
+            $('#landCount').text(`${plantedCount}/9`);
+        }
+
+        function renderLandPlots() {
+            const farmGrid = $('#farmGrid');
+            farmGrid.empty();
+
+            landPlots.forEach((plot) => {
+                let plotHtml = '';
+
+                if (plot.planted) {
+                    const progressPercent = Math.min(plot.progress, 100);
+                    const isRipe = plot.progress >= 100;
+                    const growthStage = getGrowthStage(plot.progress);
+
+                    plot.growthStage = growthStage;
+
+                    const plotClasses = ['land-plot', 'planted', 'interactive'];
+
+                    if (isRipe) {
+                        plotClasses.push('ripe');
+                        plotClasses.push('mature');
+                    }
+
+                    const treeClasses = ['tree', `tree-${growthStage}`];
+                    if (plot.watered) treeClasses.push('tree-watered');
+                    if (plot.fertilized) treeClasses.push('tree-fertilized');
+
+                    // 获取作物信息
+                    const cropInfo = crops.find(c => c.id === plot.cropId);
+                    const orbColor = cropInfo ? cropInfo.orbColor : '#FF9800';
+
+                    // 创建树叶元素
+                    let leafElements = '';
+                    if (growthStage === 'seedling' || growthStage === 'growing') {
+                        leafElements = `
+                                    <div class="tree-leaf"></div>
+                                    <div class="tree-leaf"></div>
+                                    ${growthStage === 'growing' ? '<div class="tree-leaf"></div>' : ''}
+                                `;
+                    }
+
+                    // 创建动态球元素 - 根据树种设置不同颜色
+                    let orbElements = '';
+                    if (growthStage === 'blooming' || growthStage === 'fruiting' || growthStage === 'ripe') {
+                        const orbCount = growthStage === 'ripe' ? 5 : (growthStage === 'fruiting' ? 4 : 4);
+                        for (let i = 0; i < orbCount; i++) {
+                            orbElements += `<div class="tree-orb" style="background: ${orbColor}"></div>`;
+                        }
+                    }
+
+                    plotHtml = `
+                                <div class="${plotClasses.join(' ')}"
+                                     data-plot-id="${plot.id}"
+                                     onclick="${isRipe ? '' : `selectTree(${plot.id})`}">
+                                    <!-- 树名放在卡片内部上方 -->
+                                    <div class="tree-name">${plot.crop}</div>
+
+                                    ${isRipe ? `
+                                        <!-- 收获按钮 -->
+                                        <button class="harvest-btn interactive" onclick="harvestTree(${plot.id}, event)">
+                                            <i class="bi bi-hand-index-thumb"></i>
+                                        </button>
+                                        <div class="mature-tag">已成熟</div>
+                                    ` : ''}
+                                    ${!isRipe && plot.needs && (plot.needs.water || plot.needs.pest) ? `
+                                        <div class="status-indicators">
+                                            ${plot.needs.water ? '<div class="status-dot status-thirsty"></div>' : ''}
+                                            ${plot.needs.pest ? '<div class="status-dot status-pest"></div>' : ''}
+                                        </div>
+                                    ` : ''}
+                                    <div class="tree-container">
+                                        <div class="${treeClasses.join(' ')}">
+                                            <div class="tree-trunk"></div>
+                                            <div class="tree-canopy">
+                                                ${leafElements}
+                                                ${orbElements}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 生长进度条 -->
+                                    <div class="growth-progress">
+                                        <div class="growth-bar" style="width: ${progressPercent}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                } else {
+                    plotHtml = `
+                                <div class="land-plot empty interactive"
+                                     data-plot-id="${plot.id}"
+                                     onclick="selectPlot(${plot.id})">
+                                    <i class="bi bi-plus-circle" style="font-size: 24px;"></i>
+                                    <div class="empty-label">种植</div>
+                                </div>
+                            `;
+                }
+
+                farmGrid.append(plotHtml);
+            });
+        }
+
+        function initSeedsSelection() {
+            const seedsList = $('#seedsList');
+            seedsList.empty();
+
+            crops.forEach(crop => {
+                const canAfford = farmData.coins >= crop.cost;
+
+                const seedHtml = `
+                            <div class="seed-item ${!canAfford ? 'disabled' : 'interactive'}"
+                                 data-crop-id="${crop.id}"
+                                 onclick="${canAfford ? `selectCrop(${crop.id})` : ''}">
+                                <div class="seed-icon">${crop.icon}</div>
+                                <div class="seed-name">${crop.name}</div>
+                                <div class="seed-cost">${crop.cost}金币</div>
+                                <div class="seed-time">${crop.time}成熟</div>
+                            </div>
+                        `;
+
+                seedsList.append(seedHtml);
+            });
+        }
+
+        function selectPlot(plotId) {
+            if (farmData.selectedTree) {
+                $(`.land-plot.planted[data-plot-id="${farmData.selectedTree}"]`).removeClass('selected');
+                farmData.selectedTree = null;
+            }
+
+            farmData.selectedPlot = plotId;
+            farmData.selectedTree = null;
+
+            $('.land-plot').removeClass('selected');
+            $(`.land-plot.empty[data-plot-id="${plotId}"]`).addClass('selected');
+
+            // 如果已经选择了作物，立即种植
+            if (farmData.selectedCrop) {
+                plantCrop();
+            }
+        }
+
+        function selectTree(plotId) {
+            const plot = landPlots.find(p => p.id === plotId);
+            if (plot && plot.progress >= 100) {
+                // 成熟树木点击时不选择，让用户点击收获按钮
+                return;
+            }
+
+            if (farmData.selectedPlot) {
+                $(`.land-plot.empty[data-plot-id="${farmData.selectedPlot}"]`).removeClass('selected');
+                farmData.selectedPlot = null;
+            }
+
+            farmData.selectedTree = plotId;
+
+            $('.land-plot').removeClass('selected');
+            $(`.land-plot[data-plot-id="${plotId}"]`).addClass('selected');
+        }
+
+        function selectCrop(cropId) {
+            farmData.selectedCrop = cropId;
+
+            $('.seed-item').removeClass('selected');
+            $(`.seed-item[data-crop-id="${cropId}"]`).addClass('selected');
+
+            // 如果已经选择了土地，立即种植
+            if (farmData.selectedPlot) {
+                plantCrop();
+            } else {
+                showFarmNotification('请点击要种植的空土地');
+            }
+        }
+
+        // 种植功能
+        function plantCrop() {
+            if (!farmData.selectedPlot || !farmData.selectedCrop) {
+                showError('请选择土地和作物');
+                return;
+            }
+
+            const selectedCrop = crops.find(c => c.id === farmData.selectedCrop);
+
+            if (farmData.coins < selectedCrop.cost) {
+                showError('农场币不足');
+                return;
+            }
+
+            // 扣除农场币
+            farmData.coins -= selectedCrop.cost;
+
+            // 更新土地状态
+            const plotIndex = landPlots.findIndex(p => p.id === farmData.selectedPlot);
+            if (plotIndex !== -1) {
+                landPlots[plotIndex] = {
+                    ...landPlots[plotIndex],
+                    planted: true,
+                    crop: selectedCrop.name,
+                    cropId: selectedCrop.id,
+                    progress: 10,
+                    growthStage: 'seedling',
+                    watered: false,
+                    fertilized: false,
+                    ripe: false,
+                    mature: false,
+                    needs: {
+                        water: Math.random() > 0.5,
+                        pest: Math.random() > 0.5
+                    }
+                };
+
+                // 更新统计数据
+                farmData.totalTrees += 1;
+                farmData.userExp += selectedCrop.exp;
+                farmData.userRank = Math.max(1, farmData.userRank - Math.floor(Math.random() * 3));
+
+                // 更新显示
+                updateFarmInfo();
+                renderLandPlots();
+                initSeedsSelection();
+
+                // 重置选择
+                farmData.selectedPlot = null;
+                farmData.selectedCrop = null;
+                $('.land-plot').removeClass('selected');
+                $('.seed-item').removeClass('selected');
+
+                // 显示农场提示
+                showFarmNotification(`成功种植${selectedCrop.name}！获得${selectedCrop.exp}经验`);
+
+                // 播放成功音效
+                playSound('success');
+            }
+        }
+
+        // 收获功能
+        function harvestTree(plotId, event) {
+            if (event) event.stopPropagation();
+
+            const plotIndex = landPlots.findIndex(p => p.id === plotId);
+            if (plotIndex === -1 || !landPlots[plotIndex].planted) {
+                showError('请选择已种植的树木');
+                return;
+            }
+
+            const plot = landPlots[plotIndex];
+            if (plot.progress < 100) {
+                showError('作物还未成熟，无法收获');
+                return;
+            }
+
+            // 获取作物信息
+            const crop = crops.find(c => c.name === plot.crop);
+            if (!crop) return;
+
+            // 收获收益
+            const harvestReward = crop.sellPrice;
+            const harvestExp = Math.floor(crop.exp * 0.8);
+
+            farmData.coins += harvestReward;
+            farmData.userExp += harvestExp;
+
+            // 更新排名（收获会提升排名）
+            farmData.userRank = Math.max(1, farmData.userRank - 1);
+
+            // 重置土地状态
+            landPlots[plotIndex] = {
+                id: plot.id,
+                planted: false,
+                watered: false,
+                fertilized: false,
+                ripe: false,
+                mature: false
+            };
+
+            // 更新显示
+            updateFarmInfo();
+            renderLandPlots();
+            initSeedsSelection();
+
+            // 计算净收益
+            const netProfit = harvestReward - crop.cost;
+
+            // 显示农场提示
+            showFarmNotification(`收获成功！获得${crop.product}，收益${harvestReward}农场币（净赚${netProfit}）和${harvestExp}经验`);
+
+            // 播放成功音效
+            playSound('success');
+        }
+
+        // 工具功能
+        function waterTree() {
+            if (!farmData.selectedTree) {
+                showError('请先选择一棵树');
+                return;
+            }
+
+            const plotIndex = landPlots.findIndex(p => p.id === farmData.selectedTree);
+            if (plotIndex === -1 || !landPlots[plotIndex].planted) {
+                showError('请选择已种植的树木');
+                return;
+            }
+
+            const plot = landPlots[plotIndex];
+            if (plot.progress >= 100) {
+                showError('该树已成熟，无需浇水');
+                return;
+            }
+
+            const tool = farmData.tools.water;
+            if (farmData.coins < tool.cost) {
+                showError('农场币不足');
+                return;
+            }
+
+            farmData.coins -= tool.cost;
+            const oldProgress = plot.progress;
+            landPlots[plotIndex].progress = Math.min(oldProgress + tool.effect, 100);
+            landPlots[plotIndex].watered = true;
+
+            if (landPlots[plotIndex].needs) {
+                landPlots[plotIndex].needs.water = false;
+            }
+
+            updateFarmInfo();
+            renderLandPlots();
+
+            // 显示农场提示
+            showFarmNotification(`浇水成功！生长进度+${tool.effect}%，树木变得更加鲜艳`);
+
+            // 播放成功音效
+            playSound('success');
+        }
+
+        function fertilizeTree() {
+            if (!farmData.selectedTree) {
+                showError('请先选择一棵树');
+                return;
+            }
+
+            const plotIndex = landPlots.findIndex(p => p.id === farmData.selectedTree);
+            if (plotIndex === -1 || !landPlots[plotIndex].planted) {
+                showError('请选择已种植的树木');
+                return;
+            }
+
+            const plot = landPlots[plotIndex];
+            if (plot.progress >= 100) {
+                showError('该树已成熟，无需施肥');
+                return;
+            }
+
+            const tool = farmData.tools.fertilizer;
+            if (farmData.coins < tool.cost) {
+                showError('农场币不足');
+                return;
+            }
+
+            farmData.coins -= tool.cost;
+            const oldProgress = plot.progress;
+            landPlots[plotIndex].progress = Math.min(oldProgress + tool.effect, 100);
+            landPlots[plotIndex].fertilized = true;
+
+            updateFarmInfo();
+            renderLandPlots();
+
+            // 显示农场提示
+            showFarmNotification(`施肥成功！生长进度+${tool.effect}%，树木生长更加旺盛`);
+
+            // 播放成功音效
+            playSound('success');
+        }
+
+        function removePest() {
+            if (!farmData.selectedTree) {
+                showError('请先选择一棵树');
+                return;
+            }
+
+            const plotIndex = landPlots.findIndex(p => p.id === farmData.selectedTree);
+            if (plotIndex === -1 || !landPlots[plotIndex].planted) {
+                showError('请选择已种植的树木');
+                return;
+            }
+
+            const plot = landPlots[plotIndex];
+            if (plot.progress >= 100) {
+                showError('该树已成熟，无需除虫');
+                return;
+            }
+
+            const tool = farmData.tools.pesticide;
+            if (farmData.coins < tool.cost) {
+                showError('农场币不足');
+                return;
+            }
+
+            farmData.coins -= tool.cost;
+            const oldProgress = plot.progress;
+            landPlots[plotIndex].progress = Math.min(oldProgress + tool.effect, 100);
+
+            if (landPlots[plotIndex].needs) {
+                landPlots[plotIndex].needs.pest = false;
+            }
+
+            updateFarmInfo();
+            renderLandPlots();
+
+            // 显示农场提示
+            showFarmNotification(`除虫成功！生长进度+${tool.effect}%，树木恢复健康`);
+
+            // 播放成功音效
+            playSound('success');
+        }
+
+        function checkGrowth() {
+            if (!farmData.selectedTree) {
+                showError('请先选择一棵树');
+                return;
+            }
+
+            const plotIndex = landPlots.findIndex(p => p.id === farmData.selectedTree);
+            if (plotIndex === -1 || !landPlots[plotIndex].planted) {
+                showError('请选择已种植的树木');
+                return;
+            }
+
+            const plot = landPlots[plotIndex];
+            const crop = crops.find(c => c.name === plot.crop);
+
+            let statusMsg = `${plot.crop}生长进度：${Math.round(plot.progress)}%`;
+            statusMsg += ` (${getGrowthStageName(plot.growthStage)})`;
+
+            if (plot.progress >= 100) {
+                statusMsg += ' - 已成熟！可点击收获按钮';
+            } else {
+                if (plot.watered) {
+                    statusMsg += ' | 已浇水';
+                }
+                if (plot.fertilized) {
+                    statusMsg += ' | 已施肥';
+                }
+                if (crop) {
+                    statusMsg += ` | 预计成熟: ${Math.ceil((100 - plot.progress) / 5)}小时后`;
+                }
+            }
+
+            // 显示农场提示
+            showFarmNotification(statusMsg);
+
+            // 播放成功音效
+            playSound('success');
+        }
+
+        // 信息显示
+        function showInfo(type) {
+            const messages = {
+                trees: `您已种植 ${farmData.totalTrees} 棵作物`,
+                coins: `当前拥有 ${farmData.coins} 农场币`,
+                rank: `全球排名第 ${farmData.userRank} 名`,
+                exp: `农场经验 ${farmData.userExp} 点`
+            };
+            showSuccess(messages[type] || '功能信息');
+        }
+
+        // 显示农场提示
+        function showFarmNotification(message) {
+            const notification = $('#farmNotification');
+            notification.text(message).fadeIn().delay(3000).fadeOut();
+        }
+
+        // 游戏循环
+        function startGameLoop() {
+            // 每4秒更新作物状态
+            setInterval(() => {
+                landPlots.forEach((plot, index) => {
+                    if (plot.planted && plot.progress < 100) {
+                        landPlots[index].progress = Math.min(plot.progress + 0.5, 100);
+
+                        landPlots[index].growthStage = getGrowthStage(landPlots[index].progress);
+
+                        if (landPlots[index].progress >= 100 && !landPlots[index].ripe) {
+                            landPlots[index].ripe = true;
+                            landPlots[index].mature = true;
+                        }
+
+                        if (landPlots[index].watered && Math.random() < 0.1) {
+                            landPlots[index].watered = false;
+                        }
+                        if (landPlots[index].fertilized && Math.random() < 0.05) {
+                            landPlots[index].fertilized = false;
+                        }
+                    }
+                });
+                renderLandPlots();
+            }, 4000);
+
+            // 每8秒随机产生需求
+            setInterval(() => {
+                landPlots.forEach((plot, index) => {
+                    if (plot.planted && plot.progress < 100) {
+                        if (Math.random() < 0.12) {
+                            landPlots[index].needs.water = true;
+                            landPlots[index].watered = false;
+                        }
+                        if (Math.random() < 0.1) {
+                            landPlots[index].needs.pest = true;
+                        }
+                    }
+                });
+                renderLandPlots();
+            }, 8000);
+        }
+
+        // 事件绑定
+        function bindEvents() {
+            // 不需要绑定开始种植按钮
+        }
+
+        function showSuccess(message) {
+            $('#successMessage').text(message);
+            $('#successAlert').fadeIn().delay(2000).fadeOut();
+            playSound('success');
+        }
+
+        function showError(message) {
+            $('#errorMessage').text(message);
+            $('#errorAlert').fadeIn().delay(2000).fadeOut();
+            playSound('error');
+        }
+    </script>
+</body>
+</html>
